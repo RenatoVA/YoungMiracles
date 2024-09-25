@@ -1,7 +1,8 @@
 package com.grupo1software.youngmiracles.controller;
 
-import com.grupo1software.youngmiracles.model.entity.Usuario;
+import com.grupo1software.youngmiracles.dto.UsuarioDTO;
 import com.grupo1software.youngmiracles.service.AdminUsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,13 @@ public class AdminUsuarioController {
     private final AdminUsuarioService adminUsuarioService;
 
     @PostMapping
-    public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario) {
-        Usuario nuevoUsuario = adminUsuarioService.createUsuario(usuario);
+    public ResponseEntity<UsuarioDTO> createUsuario(@Valid @RequestBody UsuarioDTO usuario) {
+        UsuarioDTO nuevoUsuario = adminUsuarioService.createUsuario(usuario);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> getUsuario(@PathVariable Long id) {
-        Usuario usuario = adminUsuarioService.getUsuarioById(id);
+    public ResponseEntity<UsuarioDTO> getUsuario(@PathVariable Long id) {
+        UsuarioDTO usuario = adminUsuarioService.getUsuarioById(id);
         if (usuario != null) {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         }
@@ -31,14 +32,14 @@ public class AdminUsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> getAllUsuarios() {
-        List<Usuario> usuarios = adminUsuarioService.getAllUsuarios();
+    public ResponseEntity<List<UsuarioDTO>> getAllUsuarios() {
+        List<UsuarioDTO> usuarios = adminUsuarioService.getAllUsuarios();
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        Usuario updatedUsuario = adminUsuarioService.updateUsuario(id, usuario);
+    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioDTO usuario) {
+        UsuarioDTO updatedUsuario = adminUsuarioService.updateUsuario(id, usuario);
         if (updatedUsuario != null) {
             return new ResponseEntity<>(updatedUsuario, HttpStatus.OK);
         }
