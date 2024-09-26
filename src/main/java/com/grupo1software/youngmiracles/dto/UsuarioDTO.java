@@ -29,8 +29,7 @@ public class UsuarioDTO {
     @NotBlank (message= "El apellido materno es obligatorio")
     @Size (max=50,message="El apellido materno 50 caracteres o menos")
     private String apellido_materno;
-    @NotBlank (message= "La edad es obligatorio")
-    @Size (max=4,message="La edad tiene que ser menos de 4 digitos")
+    @NotNull (message= "La edad es obligatorio")
     private Integer edad;
     private String genero;
     private String correo;

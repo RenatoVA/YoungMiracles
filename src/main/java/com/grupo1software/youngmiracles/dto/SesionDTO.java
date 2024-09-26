@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
         property = "tiposesion"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Fisioterapia.class, name = "fisioterapia"),
-        @JsonSubTypes.Type(value = Taller.class, name = "taller"),
-        @JsonSubTypes.Type(value = Nutricion.class, name = "nutricion"),
+        @JsonSubTypes.Type(value = FisioterapiaDTO.class, name = "fisioterapia"),
+        @JsonSubTypes.Type(value = TallerDTO.class, name = "taller"),
+        @JsonSubTypes.Type(value = NutricionDTO.class, name = "nutricion"),
 
 })
 public class SesionDTO {
@@ -33,6 +33,6 @@ public class SesionDTO {
     private AdultoMayor adultoMayor;
     @NotNull(message= "El id del voluntario es obligatorio")
     private Voluntario voluntario;
-    @NotBlank (message= "El nombre es obligatorio")
+    @NotNull (message= "El nombre es obligatorio")
     private Integer duracion;
 }
