@@ -3,9 +3,9 @@ package com.grupo1software.youngmiracles.service.impl;
 import com.grupo1software.youngmiracles.model.entity.ConsultaNutricion;
 import com.grupo1software.youngmiracles.repository.ConsultaNutricionRepository;
 import com.grupo1software.youngmiracles.service.ConsultaNutricionService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -51,12 +51,4 @@ public class ConsultaNutricionServiceImpl implements ConsultaNutricionService {
         }
         return null;
     }
-
-    @Transactional
-    @Override
-    public void deleteConsulta(Long id) {
-        consultaNutricionRepository.deleteById(id);
-    }
-
-
 }

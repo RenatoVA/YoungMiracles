@@ -15,5 +15,4 @@ public interface ConsultaNutricionService {
 
     ConsultaNutricion updateConsulta(Long id, ConsultaNutricion consultaNutricion);
 
-    void deleteConsulta(Long id);
 }
