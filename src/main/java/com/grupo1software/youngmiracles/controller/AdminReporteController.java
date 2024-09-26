@@ -19,7 +19,7 @@ public class AdminReporteController {
 
 
     @PostMapping
-    public ResponseEntity<ReporteDTO> createReporte(@RequestBody ReporteDTO reporteDTO) {
+    public ResponseEntity<ReporteDTO> createReporte(@Valid @RequestBody ReporteDTO reporteDTO) {
         ReporteDTO reporte = adminReporteService.createReporte(reporteDTO);
         return new ResponseEntity<>(reporte, HttpStatus.CREATED);
     }

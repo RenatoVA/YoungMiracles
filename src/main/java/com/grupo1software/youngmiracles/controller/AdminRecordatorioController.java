@@ -3,6 +3,7 @@ package com.grupo1software.youngmiracles.controller;
 
 import com.grupo1software.youngmiracles.model.entity.Recordatorio;
 import com.grupo1software.youngmiracles.service.AdminRecordatorioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class AdminRecordatorioController {
     private final AdminRecordatorioService adminRecordatorioService;
 
     @PostMapping
-    public ResponseEntity<Recordatorio> createRecordatorio(@RequestBody Recordatorio recordatorio) {
+    public ResponseEntity<Recordatorio> createRecordatorio(@Valid @RequestBody Recordatorio recordatorio) {
         Recordatorio nuevoRecordatorio = adminRecordatorioService.createRecordatorio(recordatorio);
         return new ResponseEntity<>(nuevoRecordatorio, HttpStatus.CREATED);
     }
@@ -44,7 +45,7 @@ public class AdminRecordatorioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Recordatorio> updateRecordatorio(@PathVariable Long id, @RequestBody Recordatorio recordatorio) {
+    public ResponseEntity<Recordatorio> updateRecordatorio(@PathVariable Long id, @Valid  @RequestBody Recordatorio recordatorio) {
         Recordatorio updatedRecordatorio = adminRecordatorioService.updateRecordatorio(id, recordatorio);
         if (updatedRecordatorio != null) {
             return new ResponseEntity<>(updatedRecordatorio, HttpStatus.OK);

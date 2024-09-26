@@ -2,6 +2,7 @@ package com.grupo1software.youngmiracles.controller;
 
 import com.grupo1software.youngmiracles.model.entity.Horario;
 import com.grupo1software.youngmiracles.service.AdminHorarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class AdminHorarioController {
     private final AdminHorarioService adminHorarioService;
 
     @PostMapping
-    public ResponseEntity<Horario> createHorario(@RequestBody Horario horario) {
+    public ResponseEntity<Horario> createHorario(@Valid @RequestBody Horario horario) {
         Horario nuevoHorario = adminHorarioService.createHorario(horario);
         return new ResponseEntity<>(nuevoHorario, HttpStatus.CREATED);
     }
@@ -41,7 +42,7 @@ public class AdminHorarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Horario> updateHorario(@PathVariable Long id, @RequestBody Horario horario) {
+    public ResponseEntity<Horario> updateHorario(@PathVariable Long id, @Valid @RequestBody Horario horario) {
         Horario updatedhorario = adminHorarioService.updateHorario(id, horario);
         if (updatedhorario != null) {
             return new ResponseEntity<>(updatedhorario, HttpStatus.OK);

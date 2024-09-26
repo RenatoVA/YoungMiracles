@@ -3,6 +3,7 @@ package com.grupo1software.youngmiracles.controller;
 
 import com.grupo1software.youngmiracles.model.entity.Videollamada;
 import com.grupo1software.youngmiracles.service.AdminVideollamadaService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class AdminVideollamadaController {
     private final AdminVideollamadaService adminVideollamadaService;
 
     @PostMapping
-    public ResponseEntity<Videollamada> createVideollamada(@RequestBody Videollamada videollamada) {
+    public ResponseEntity<Videollamada> createVideollamada(@Valid @RequestBody Videollamada videollamada) {
         Videollamada nuevaVideollamada = adminVideollamadaService.createVideollamada(videollamada);
         return new ResponseEntity<>(nuevaVideollamada, HttpStatus.CREATED);
     }
@@ -38,7 +39,7 @@ public class AdminVideollamadaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Videollamada> updateVideollamada(@PathVariable Long id, @RequestBody Videollamada videollamada) {
+    public ResponseEntity<Videollamada> updateVideollamada(@PathVariable Long id,@Valid @RequestBody Videollamada videollamada) {
         Videollamada updatedVideollamada = adminVideollamadaService.updateVideollamada(id, videollamada);
         if (updatedVideollamada != null) {
             return new ResponseEntity<>(updatedVideollamada, HttpStatus.OK);

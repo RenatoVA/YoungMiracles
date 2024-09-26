@@ -2,6 +2,7 @@ package com.grupo1software.youngmiracles.controller;
 
 import com.grupo1software.youngmiracles.model.entity.Progreso;
 import com.grupo1software.youngmiracles.service.AdminProgresoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class AdminProgresoController {
     private final AdminProgresoService adminProgresoService;
 
     @PostMapping
-    public ResponseEntity<Progreso> createProgreso(@RequestBody Progreso horario) {
+    public ResponseEntity<Progreso> createProgreso(@Valid  @RequestBody Progreso horario) {
         Progreso nuevoprogreso = adminProgresoService.createProgreso(horario);
         return new ResponseEntity<>(nuevoprogreso, HttpStatus.CREATED);
     }
@@ -41,7 +42,7 @@ public class AdminProgresoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Progreso> updateProgreso(@PathVariable Long id, @RequestBody Progreso progreso) {
+    public ResponseEntity<Progreso> updateProgreso(@PathVariable Long id, @Valid @RequestBody Progreso progreso) {
         Progreso updatedprogreso = adminProgresoService.updateProgreso(id, progreso);
         if (updatedprogreso != null) {
             return new ResponseEntity<>(updatedprogreso, HttpStatus.OK);

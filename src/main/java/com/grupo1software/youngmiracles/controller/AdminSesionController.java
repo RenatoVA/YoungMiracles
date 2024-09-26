@@ -3,6 +3,7 @@ package com.grupo1software.youngmiracles.controller;
 import com.grupo1software.youngmiracles.dto.SesionDTO;
 import com.grupo1software.youngmiracles.model.entity.Sesion;
 import com.grupo1software.youngmiracles.service.AdminSesionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class AdminSesionController {
     private final AdminSesionService adminSesionService;
 
     @PostMapping
-    public ResponseEntity<SesionDTO> createSession(@RequestBody SesionDTO session) {
+    public ResponseEntity<SesionDTO> createSession(@Valid @RequestBody SesionDTO session) {
         SesionDTO nuevaSession = adminSesionService.createSesion(session);
         return new ResponseEntity<>(nuevaSession, HttpStatus.CREATED);
     }
@@ -38,7 +39,7 @@ public class AdminSesionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SesionDTO> updateSession(@PathVariable Long id, @RequestBody SesionDTO session) {
+    public ResponseEntity<SesionDTO> updateSession(@PathVariable Long id, @Valid @RequestBody SesionDTO session) {
         SesionDTO updatedSession = adminSesionService.updateSesion(id, session);
         if (updatedSession != null) {
             return new ResponseEntity<>(updatedSession, HttpStatus.OK);
