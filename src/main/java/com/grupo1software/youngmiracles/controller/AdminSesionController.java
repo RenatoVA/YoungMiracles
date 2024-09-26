@@ -1,5 +1,6 @@
 package com.grupo1software.youngmiracles.controller;
 
+import com.grupo1software.youngmiracles.dto.SesionDTO;
 import com.grupo1software.youngmiracles.model.entity.Sesion;
 import com.grupo1software.youngmiracles.service.AdminSesionService;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +17,14 @@ public class AdminSesionController {
     private final AdminSesionService adminSesionService;
 
     @PostMapping
-    public ResponseEntity<Sesion> createSession(@RequestBody Sesion session) {
-        Sesion nuevaSession = adminSesionService.createSesion(session);
+    public ResponseEntity<SesionDTO> createSession(@RequestBody SesionDTO session) {
+        SesionDTO nuevaSession = adminSesionService.createSesion(session);
         return new ResponseEntity<>(nuevaSession, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sesion> getSession(@PathVariable Long id) {
-        Sesion session = adminSesionService.getSesionById(id);
+    public ResponseEntity<SesionDTO> getSession(@PathVariable Long id) {
+        SesionDTO session = adminSesionService.getSesionById(id);
         if (session != null) {
             return new ResponseEntity<>(session, HttpStatus.OK);
         }
@@ -31,14 +32,14 @@ public class AdminSesionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Sesion>> getAllSessions() {
-        List<Sesion> sessions = adminSesionService.getAllSesions();
+    public ResponseEntity<List<SesionDTO>> getAllSessions() {
+        List<SesionDTO> sessions = adminSesionService.getAllSesions();
         return new ResponseEntity<>(sessions, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Sesion> updateSession(@PathVariable Long id, @RequestBody Sesion session) {
-        Sesion updatedSession = adminSesionService.updateSesion(id, session);
+    public ResponseEntity<SesionDTO> updateSession(@PathVariable Long id, @RequestBody SesionDTO session) {
+        SesionDTO updatedSession = adminSesionService.updateSesion(id, session);
         if (updatedSession != null) {
             return new ResponseEntity<>(updatedSession, HttpStatus.OK);
         }
@@ -52,14 +53,14 @@ public class AdminSesionController {
     }
 
     @GetMapping("/adultomayor/{id}")
-    public ResponseEntity<List<Sesion>> getSessionsByAdultoMayor(@PathVariable Long id) {
-        List<Sesion> sessions = adminSesionService.getSesionsByAdultoMayor(id);
+    public ResponseEntity<List<SesionDTO>> getSessionsByAdultoMayor(@PathVariable Long id) {
+        List<SesionDTO> sessions = adminSesionService.getSesionsByAdultoMayor(id);
         return new ResponseEntity<>(sessions, HttpStatus.OK);
     }
 
     @GetMapping("/voluntario/{id}")
-    public ResponseEntity<List<Sesion>> getSessionsByVoluntario(@PathVariable Long id) {
-        List<Sesion> sessions = adminSesionService.getSesionsByVoluntario(id);
+    public ResponseEntity<List<SesionDTO>> getSessionsByVoluntario(@PathVariable Long id) {
+        List<SesionDTO> sessions = adminSesionService.getSesionsByVoluntario(id);
         return new ResponseEntity<>(sessions, HttpStatus.OK);
     }
 }

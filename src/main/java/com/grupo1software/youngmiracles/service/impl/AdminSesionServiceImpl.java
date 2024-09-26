@@ -1,6 +1,9 @@
 package com.grupo1software.youngmiracles.service.impl;
 
+import com.grupo1software.youngmiracles.dto.SesionDTO;
+import com.grupo1software.youngmiracles.mapper.SesionMapper;
 import com.grupo1software.youngmiracles.model.entity.Fisioterapia;
+import com.grupo1software.youngmiracles.model.entity.Nutricion;
 import com.grupo1software.youngmiracles.model.entity.Sesion;
 import com.grupo1software.youngmiracles.model.entity.Taller;
 import com.grupo1software.youngmiracles.repository.SesionRepository;
@@ -18,53 +21,58 @@ public class AdminSesionServiceImpl implements AdminSesionService {
 
     private final SesionRepository sesionRepository;
 
+    private final SesionMapper sesionMapper;
+
     @Transactional
     @Override
-    public Sesion createSesion(Sesion sesion) {
-        if (sesion instanceof Fisioterapia) {
-            return createFisioterapia((Fisioterapia) sesion);
-        } else if (sesion instanceof Taller) {
-            return createTaller((Taller) sesion);
-        } else {
-            return null;
-        }
+    public SesionDTO createSesion(SesionDTO sesionDTO) {
+        Sesion sesion = sesionMapper.toEntity(sesionDTO);
+        sesion.setFechaRegistro(LocalDateTime.now());
+        Sesion sesioncreada=sesionRepository.save(sesion);
+        return sesionMapper.toDTO(sesioncreada);
+
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Sesion getSesionById(Long id) {
-        return sesionRepository.findById(id).orElse(null);
+    public SesionDTO getSesionById(Long id) {
+        return sesionMapper.toDTO(sesionRepository.findById(id).orElse(null));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Sesion> getAllSesions() {
-        return sesionRepository.findAll();
+    public List<SesionDTO> getAllSesions() {
+        return sesionRepository.findAll().stream().map(sesionMapper::toDTO).toList();
     }
 
     @Transactional
     @Override
-    public Sesion updateSesion(Long id, Sesion sesionactualizado) {
-        Sesion sesion = sesionRepository.findById(id).orElse(null);
-        if (sesion != null) {
-            sesion.setFecha(sesionactualizado.getFecha());
-            sesion.setEstado(sesionactualizado.getEstado());
-            sesion.setDuracion(sesionactualizado.getDuracion());
-            sesion.setVoluntario(sesionactualizado.getVoluntario());
-            sesion.setAdultoMayor(sesionactualizado.getAdultoMayor());
-            sesion.setDuracion(sesionactualizado.getDuracion());
-            switch (sesion) {
-                case Fisioterapia fisioterapia when sesionactualizado instanceof Fisioterapia ->
+    public SesionDTO updateSesion(Long id, SesionDTO sesionactualizadoDTO) {
+
+        Sesion sesionexistente=sesionRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado con el ID: " + id));
+
+
+        Sesion sesionactualizado=sesionMapper.toEntity(sesionactualizadoDTO);
+
+        sesionexistente.setFecha(sesionactualizado.getFecha());
+        sesionexistente.setEstado(sesionactualizado.getEstado());
+        sesionexistente.setDuracion(sesionactualizado.getDuracion());
+        sesionexistente.setVoluntario(sesionactualizado.getVoluntario());
+        sesionexistente.setAdultoMayor(sesionactualizado.getAdultoMayor());
+        sesionexistente.setDuracion(sesionactualizado.getDuracion());
+
+        switch (sesionexistente){
+            case Fisioterapia fisioterapia when sesionactualizado instanceof Fisioterapia ->
                     updateFisioterapia(fisioterapia, (Fisioterapia) sesionactualizado);
-                case Taller taller when sesionactualizado instanceof Taller ->
+            case Taller taller when sesionactualizado instanceof Taller ->
                     updateTaller(taller, (Taller) sesionactualizado);
-                default -> {
-                }
-            }
-            return sesionRepository.save(sesion);
+            case Nutricion nutricion when sesionactualizado instanceof Nutricion ->
+                    updateNutricion(nutricion, (Nutricion) sesionactualizado);
+            default -> throw new IllegalArgumentException("Tipo de sesion no soportado");
 
         }
-        return null;
+
+        return sesionMapper.toDTO(sesionRepository.save(sesionexistente));
     }
 
     @Transactional
@@ -75,31 +83,15 @@ public class AdminSesionServiceImpl implements AdminSesionService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Sesion> getSesionsByAdultoMayor(Long adultoMayorId) {
-        return sesionRepository.findByAdultoMayorId(adultoMayorId);
+    public List<SesionDTO> getSesionsByAdultoMayor(Long adultoMayorId) {
+        return sesionRepository.findByAdultoMayorId(adultoMayorId).stream().map(sesionMapper::toDTO).toList();
     }
 
 
     @Transactional(readOnly = true)
     @Override
-    public List<Sesion> getSesionsByVoluntario(Long voluntarioId) {
-        return sesionRepository.findByVoluntarioId(voluntarioId);
-    }
-    private Sesion createFisioterapia(Sesion sesion) {
-        if (sesion instanceof Fisioterapia) {
-            sesion.setFechaRegistro(LocalDateTime.now());
-            return sesionRepository.save(sesion);
-        }
-        throw new IllegalArgumentException("La sesion debe ser fisioterapia");
-    }
-
-    private Sesion createTaller(Sesion sesion) {
-        if (sesion instanceof Taller) {
-            sesion.setFechaRegistro(LocalDateTime.now());
-            return sesionRepository.save(sesion);
-
-        }
-        throw new IllegalArgumentException("La sesion debe ser taller");
+    public List<SesionDTO> getSesionsByVoluntario(Long voluntarioId) {
+        return sesionRepository.findByVoluntarioId(voluntarioId).stream().map(sesionMapper::toDTO).toList();
     }
 
     private void updateFisioterapia(Fisioterapia fisioterapia, Fisioterapia details) {
@@ -111,6 +103,10 @@ public class AdminSesionServiceImpl implements AdminSesionService {
         taller.setDescripcion(details.getDescripcion());
         taller.setCapacidadMaxima(details.getCapacidadMaxima());
         taller.setMaterialRequerido(details.getMaterialRequerido());
+    }
+    private void updateNutricion(Nutricion nutricion, Nutricion details) {
+        nutricion.setIndicaciones(details.getIndicaciones());
+        nutricion.setReceta(details.getReceta());
     }
 
 }
