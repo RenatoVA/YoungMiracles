@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping
+@RequestMapping("/progresos")
 public class AdminProgresoController {
     private final AdminProgresoService adminProgresoService;
 
