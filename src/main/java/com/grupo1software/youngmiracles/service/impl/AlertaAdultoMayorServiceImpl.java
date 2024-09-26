@@ -1,11 +1,16 @@
 package com.grupo1software.youngmiracles.service.impl;
+import com.grupo1software.youngmiracles.service.AlertaAdultoMayorService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.grupo1software.youngmiracles.model.entity.AlertaAdultoMayor;
 import com.grupo1software.youngmiracles.repository.AlertaAdultoMayorRepository;
 
 import java.util.List;
 
-public class AlertaAdultoMayorServiceImpl {
+@RequiredArgsConstructor
+@Service
+public class AlertaAdultoMayorServiceImpl implements AlertaAdultoMayorService {
 
    private final AlertaAdultoMayorRepository alertaAdultoMayorRepository;
 

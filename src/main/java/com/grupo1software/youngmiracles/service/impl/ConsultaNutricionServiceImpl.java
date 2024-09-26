@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
-import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class ConsultaNutricionServiceImpl implements ConsultaNutricionService {

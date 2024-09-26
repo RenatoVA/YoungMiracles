@@ -18,7 +18,7 @@ public class AlertaAdultoMayorController {
 
     @PostMapping
     public ResponseEntity<AlertaAdultoMayor> createAlerta(@RequestBody AlertaAdultoMayor alertaAdultoMayor) {
-        AlertaAdultoMayor nuevaAlerta = alertaAdultoMayorService.createAlerta(alertaAdultoMayor);
+        AlertaAdultoMayor nuevaAlerta = alertaAdultoMayorService.crearAlerta(alertaAdultoMayor);
         return new ResponseEntity<>(nuevaAlerta, HttpStatus.CREATED);
     }
 
