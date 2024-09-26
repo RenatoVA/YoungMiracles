@@ -4,10 +4,10 @@ import com.grupo1software.youngmiracles.dto.MensajeDTO;
 import com.grupo1software.youngmiracles.mapper.MensajeMapper;
 import com.grupo1software.youngmiracles.model.entity.Mensaje;
 import com.grupo1software.youngmiracles.repository.MensajeRepository;
-import com.grupo1software.youngmiracles.repository.UsuarioRepository;
 import com.grupo1software.youngmiracles.service.AdminMensajeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +17,7 @@ public class AdminMensajeServiceImpl implements AdminMensajeService {
 
     private final MensajeRepository mensajeRepository;
     private final MensajeMapper mensajeMapper;
+    @Transactional
     @Override
     public MensajeDTO createMensaje(MensajeDTO mensaje) {
 
@@ -25,12 +26,12 @@ public class AdminMensajeServiceImpl implements AdminMensajeService {
         return mensajeMapper.toDTO(mensajeRepository.save(nuevoMensaje));
 
     }
-
+    @Transactional(readOnly = true)
     @Override
     public MensajeDTO getMensajeByID(Long Id) {
         return mensajeMapper.toDTO(mensajeRepository.findById(Id).orElse(null));
     }
-
+    @Transactional
     @Override
     public MensajeDTO updateMensaje(Long Id, MensajeDTO mensajeactualizadoDTO) {
         Mensaje mensaje=mensajeRepository.findById(Id).orElseThrow(() -> new RuntimeException("Usuario no encontrado con el ID: " + Id));
@@ -39,7 +40,7 @@ public class AdminMensajeServiceImpl implements AdminMensajeService {
 
         return  mensajeMapper.toDTO(mensajeRepository.save(mensaje));
     }
-
+    @Transactional
     @Override
     public void deleteMensaje(Long Id) {
         mensajeRepository.deleteById(Id);
