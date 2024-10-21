@@ -1,6 +1,7 @@
 package com.grupo1software.youngmiracles.service.impl;
 
 import com.grupo1software.youngmiracles.dto.ReporteDTO;
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.mapper.ReporteMapper;
 import com.grupo1software.youngmiracles.model.entity.Mensaje;
 import com.grupo1software.youngmiracles.model.entity.Reporte;
@@ -32,7 +33,7 @@ public class AdminReporteServiceImpl implements AdminReporteService {
     @Transactional
     @Override
     public ReporteDTO updateReporte(Long Id,ReporteDTO reporteDTO) {
-        Reporte reporteexistente=reporteRepository.findById(Id).orElseThrow(() -> new RuntimeException("Usuario no encontrado con el ID: " + Id));
+        Reporte reporteexistente=reporteRepository.findById(Id).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con el ID: " + Id));
         Reporte reporte=reporteMapper.toEntity(reporteDTO);
         reporteexistente.setDescripcion(reporte.getDescripcion());
         return reporteMapper.toDTO(reporteRepository.save(reporteexistente));
@@ -41,7 +42,7 @@ public class AdminReporteServiceImpl implements AdminReporteService {
     @Transactional(readOnly = true)
     @Override
     public ReporteDTO getReporteById(Long id) {
-        return reporteMapper.toDTO(reporteRepository.findById(id).orElse(null));
+        return reporteMapper.toDTO(reporteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrada con el ID: " + id)));
     }
 
     @Transactional(readOnly = true)

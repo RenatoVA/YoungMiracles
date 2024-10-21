@@ -1,5 +1,6 @@
 package com.grupo1software.youngmiracles.service.impl;
 
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.model.entity.Videollamada;
 import com.grupo1software.youngmiracles.repository.VideollamadaRepository;
 import com.grupo1software.youngmiracles.service.AdminVideollamadaService;
@@ -24,7 +25,7 @@ public class AdminVideollamadaServiceImpl implements AdminVideollamadaService {
     @Transactional(readOnly = true)
     @Override
     public Videollamada getVideollamadaById(Long id) {
-        return videollamadaRepository.findById(id).orElse(null);
+        return videollamadaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Videollamada no encontrada con el ID: " + id));
     }
 
     @Transactional(readOnly = true)
@@ -36,16 +37,14 @@ public class AdminVideollamadaServiceImpl implements AdminVideollamadaService {
     @Transactional
     @Override
     public Videollamada updateVideollamada(Long id, Videollamada videollamada) {
-        Videollamada v=videollamadaRepository.findById(id).orElse(null);
-        if (v!=null) {
+        Videollamada v=videollamadaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Retroalimentacion no encontrada con el ID: " + id));
+
             v.setDuracion(videollamada.getDuracion());
             v.setAsunto(videollamada.getAsunto());
             v.setFecha(videollamada.getFecha());
             v.setAdultoMayor(videollamada.getAdultoMayor());
             v.setVoluntario(videollamada.getVoluntario());
             return videollamadaRepository.save(v);
-        }
-        return null;
 
     }
 

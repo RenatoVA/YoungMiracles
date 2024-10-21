@@ -1,5 +1,6 @@
 package com.grupo1software.youngmiracles.service.impl;
 
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.model.entity.Progreso;
 import com.grupo1software.youngmiracles.repository.ProgresoRepository;
 import com.grupo1software.youngmiracles.service.AdminProgresoService;
@@ -24,8 +25,7 @@ public class AdminProgresoServiceImpl implements AdminProgresoService {
     @Transactional(readOnly = true)
     @Override
     public Progreso getProgresoById(Long id) {
-        return progresoRepository.findById(id).orElse(null);
-    }
+        return progresoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Progreso no encontrada con el ID: " + id));}
 
     @Transactional(readOnly = true)
     @Override
@@ -42,14 +42,11 @@ public class AdminProgresoServiceImpl implements AdminProgresoService {
     @Transactional
     @Override
     public Progreso updateProgreso(Long id, Progreso progreso) {
-        Progreso p = progresoRepository.findById(id).orElse(null);
-        if (p != null) {
+        Progreso p = progresoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Progreso no encontrada con el ID: " + id));
             p.setSesion(progreso.getSesion());
             p.setFecha(progreso.getFecha());
             p.setEstado(progreso.getEstado());
             return progresoRepository.save(p);
-        }
-        return null;
     }
 
     @Transactional

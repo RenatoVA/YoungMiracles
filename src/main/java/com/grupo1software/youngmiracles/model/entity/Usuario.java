@@ -15,7 +15,11 @@ public class Usuario {
     private String apellido_paterno;
     private String apellido_materno;
     private Integer edad;
+    private String password;
     private String genero;
     private String correo;
     private LocalDateTime fechaRegistro;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id",referencedColumnName = "id",foreignKey = @ForeignKey(name="FK_USUARIO_ROLE"))
+    private Role role;
 }

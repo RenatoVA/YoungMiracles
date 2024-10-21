@@ -1,6 +1,8 @@
 package com.grupo1software.youngmiracles.service.impl;
 
 
+import com.grupo1software.youngmiracles.exception.BadRequestException;
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.model.entity.*;
 import com.grupo1software.youngmiracles.repository.RecordatorioRepository;
 import com.grupo1software.youngmiracles.service.AdminRecordatorioService;
@@ -24,7 +26,7 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
         } else if (recordatorio instanceof RecordatorioPastilla) {
             return createRecordatorioPastilla((RecordatorioPastilla) recordatorio);
         } else {
-            return null;
+            throw new BadRequestException("Tipo de recordatorio no soportado");
         }
     }
 
@@ -49,8 +51,8 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
     @Transactional
     @Override
     public Recordatorio updateRecordatorio(Long id, Recordatorio recordatorioactualizado) {
-        Recordatorio recordatorio = recordatorioRepository.findById(id).orElse(null);
-        if (recordatorio != null) {
+        Recordatorio recordatorio = recordatorioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado con el ID: " + id));
+
             recordatorio.setUsuario(recordatorioactualizado.getUsuario());
             recordatorio.setDescripcion(recordatorioactualizado.getDescripcion());
             switch (recordatorio) {
@@ -62,8 +64,6 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
                 }
             }
             return recordatorioRepository.save(recordatorio);
-        }
-        return null;
     }
 
     @Transactional
@@ -77,14 +77,14 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
         if (recordatorio instanceof RecordatorioPastilla) {
             return recordatorioRepository.save(recordatorio);
         }
-        throw new IllegalArgumentException("El recordatorio debe ser de tipo pastilla");
+        throw new BadRequestException("El recordatorio debe ser de tipo pastilla");
     }
 
     private Recordatorio createRecordatorioSesion(Recordatorio recordatorio) {
         if (recordatorio instanceof RecordatorioSesion) {
             return recordatorioRepository.save(recordatorio);
         }
-        throw new IllegalArgumentException("El recordatorio debe ser de tipo sesion");
+        throw new BadRequestException("El recordatorio debe ser de tipo sesion");
     }
 
     private void updateRecordatorioPastilla(RecordatorioPastilla recordatorio, RecordatorioPastilla details) {

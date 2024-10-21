@@ -1,6 +1,8 @@
 package com.grupo1software.youngmiracles.service.impl;
 
 import com.grupo1software.youngmiracles.dto.SesionDTO;
+import com.grupo1software.youngmiracles.exception.BadRequestException;
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.mapper.SesionMapper;
 import com.grupo1software.youngmiracles.model.entity.Fisioterapia;
 import com.grupo1software.youngmiracles.model.entity.Nutricion;
@@ -36,7 +38,7 @@ public class AdminSesionServiceImpl implements AdminSesionService {
     @Transactional(readOnly = true)
     @Override
     public SesionDTO getSesionById(Long id) {
-        return sesionMapper.toDTO(sesionRepository.findById(id).orElse(null));
+        return sesionMapper.toDTO(sesionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Sesion no encontrada con el ID: " + id)));
     }
 
     @Transactional(readOnly = true)
@@ -49,7 +51,7 @@ public class AdminSesionServiceImpl implements AdminSesionService {
     @Override
     public SesionDTO updateSesion(Long id, SesionDTO sesionactualizadoDTO) {
 
-        Sesion sesionexistente=sesionRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado con el ID: " + id));
+        Sesion sesionexistente=sesionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Sesion no encontrado con el ID: " + id));
 
 
         Sesion sesionactualizado=sesionMapper.toEntity(sesionactualizadoDTO);
@@ -68,7 +70,7 @@ public class AdminSesionServiceImpl implements AdminSesionService {
                     updateTaller(taller, (Taller) sesionactualizado);
             case Nutricion nutricion when sesionactualizado instanceof Nutricion ->
                     updateNutricion(nutricion, (Nutricion) sesionactualizado);
-            default -> throw new IllegalArgumentException("Tipo de sesion no soportado");
+            default -> throw new BadRequestException("Tipo de sesion no soportado");
 
         }
 

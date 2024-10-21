@@ -1,5 +1,6 @@
 package com.grupo1software.youngmiracles.service.impl;
 
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.model.entity.Horario;
 import com.grupo1software.youngmiracles.repository.HorarioRepository;
 import com.grupo1software.youngmiracles.service.AdminHorarioService;
@@ -23,7 +24,7 @@ public class AdminHorarioServiceImpl implements AdminHorarioService {
     @Transactional(readOnly = true)
     @Override
     public Horario getHorarioById(Long id) {
-        return horarioRepository.findById(id).orElse(null);
+        return horarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Horario no encontrada con el ID: " + id));
     }
 
     @Transactional(readOnly = true)
@@ -35,6 +36,7 @@ public class AdminHorarioServiceImpl implements AdminHorarioService {
     @Transactional(readOnly = true)
     @Override
     public List<Horario> getHorariosByVoluntario(Long voluntarioId) {
+
         return horarioRepository.findByVoluntarioId(voluntarioId);
     }
 

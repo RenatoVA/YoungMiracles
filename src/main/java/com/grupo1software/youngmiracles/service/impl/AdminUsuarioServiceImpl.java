@@ -1,6 +1,7 @@
 package com.grupo1software.youngmiracles.service.impl;
 
 import com.grupo1software.youngmiracles.dto.UsuarioDTO;
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.mapper.UsuarioMapper;
 import com.grupo1software.youngmiracles.model.entity.AdultoMayor;
 import com.grupo1software.youngmiracles.model.entity.Familiar;
@@ -34,7 +35,7 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
     @Transactional (readOnly = true)
     @Override
     public UsuarioDTO getUsuarioById(Long id) {
-        return usuarioMapper.toDTO(usuarioRepository.findById(id).orElse(null));
+        return usuarioMapper.toDTO(usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrada con el ID: " + id)));
     }
 
     @Transactional (readOnly = true)
@@ -47,7 +48,7 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
     @Override
     public UsuarioDTO updateUsuario(Long id, UsuarioDTO usuarioactualizadoDTO) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con el ID: " + id));
 
         Usuario usuarioActualizado = usuarioMapper.toEntity(usuarioactualizadoDTO);
         usuarioExistente.setNombre(usuarioActualizado.getNombre());

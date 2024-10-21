@@ -1,6 +1,7 @@
 package com.grupo1software.youngmiracles.service.impl;
 
 import com.grupo1software.youngmiracles.dto.RetroalimentacionDTO;
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.mapper.RetroalimentacionMapper;
 import com.grupo1software.youngmiracles.model.entity.Retroalimentacion;
 import com.grupo1software.youngmiracles.repository.RetroalimentacionRepository;
@@ -25,12 +26,12 @@ public class AdminRetroalimentacionServiceImpl implements AdminRetroalimentacion
 
     @Override
     public RetroalimentacionDTO getRetroalimentacionById(Long Id) {
-        return retroalimentacionMapper.toDTO(retroalimentacionRepository.findById(Id).orElse(null));
+        return retroalimentacionMapper.toDTO(retroalimentacionRepository.findById(Id).orElseThrow(() -> new ResourceNotFoundException("Retroalimentacion no encontrada con el ID: " + Id)));
     }
 
     @Override
     public RetroalimentacionDTO updateRetroalimentacion(Long Id, RetroalimentacionDTO retroalimentacionDTO) {
-        Retroalimentacion retroalimentacionexistente=retroalimentacionRepository.findById(Id).orElseThrow(() -> new RuntimeException("Retroalimentacion no encontrada con el ID: " + Id));
+        Retroalimentacion retroalimentacionexistente=retroalimentacionRepository.findById(Id).orElseThrow(() -> new ResourceNotFoundException("Retroalimentacion no encontrada con el ID: " + Id));
         Retroalimentacion retroalimentacionActualizado=retroalimentacionMapper.toEntity(retroalimentacionDTO);
         retroalimentacionexistente.setComentario(retroalimentacionActualizado.getComentario());
         retroalimentacionexistente.setPuntaje(retroalimentacionActualizado.getPuntaje());
@@ -39,6 +40,7 @@ public class AdminRetroalimentacionServiceImpl implements AdminRetroalimentacion
 
     @Override
     public List<RetroalimentacionDTO> getRetroalimentacionesByVoluntario(Long voluntarioId) {
+
         return retroalimentacionRepository.findByVoluntarioId(voluntarioId).stream().map(retroalimentacionMapper::toDTO).toList();
     }
 

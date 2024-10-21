@@ -1,6 +1,7 @@
 package com.grupo1software.youngmiracles.service.impl;
 
 import com.grupo1software.youngmiracles.dto.MensajeDTO;
+import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.mapper.MensajeMapper;
 import com.grupo1software.youngmiracles.model.entity.Mensaje;
 import com.grupo1software.youngmiracles.repository.MensajeRepository;
@@ -29,12 +30,12 @@ public class AdminMensajeServiceImpl implements AdminMensajeService {
     @Transactional(readOnly = true)
     @Override
     public MensajeDTO getMensajeByID(Long Id) {
-        return mensajeMapper.toDTO(mensajeRepository.findById(Id).orElse(null));
+        return mensajeMapper.toDTO(mensajeRepository.findById(Id).orElseThrow(() -> new ResourceNotFoundException("Mensaje no encontrada con el ID: " + Id)));
     }
     @Transactional
     @Override
     public MensajeDTO updateMensaje(Long Id, MensajeDTO mensajeactualizadoDTO) {
-        Mensaje mensaje=mensajeRepository.findById(Id).orElseThrow(() -> new RuntimeException("Usuario no encontrado con el ID: " + Id));
+        Mensaje mensaje=mensajeRepository.findById(Id).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con el ID: " + Id));
         Mensaje mensajeactualizado=mensajeMapper.toEntity(mensajeactualizadoDTO);
         mensaje.setTexto(mensajeactualizado.getTexto());
 

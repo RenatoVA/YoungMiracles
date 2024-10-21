@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
         @JsonSubTypes.Type(value = FamiliarDTO.class, name = "familiar")
 })
 public class UsuarioDTO {
-    private Long id;
     @NotBlank (message= "El nombre es obligatorio")
     @Size (max=50,message="El nombre debe tener 50 caracteres o menos")
     private String nombre;
@@ -32,6 +31,8 @@ public class UsuarioDTO {
     @NotNull (message= "La edad es obligatorio")
     private Integer edad;
     private String genero;
+    @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
+    private String password;
     private String correo;
     @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
     private LocalDateTime fechaRegistro;
