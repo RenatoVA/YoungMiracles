@@ -16,12 +16,6 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class AdminUsuarioController {
     private final AdminUsuarioService adminUsuarioService;
-
-    @PostMapping
-    public ResponseEntity<UsuarioDTO> createUsuario(@Valid @RequestBody UsuarioDTO usuario) {
-        UsuarioDTO nuevoUsuario = adminUsuarioService.createUsuario(usuario);
-        return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
-    }
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> getUsuario(@PathVariable Long id) {
         UsuarioDTO usuario = adminUsuarioService.getUsuarioById(id);

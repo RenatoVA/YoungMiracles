@@ -1,35 +1,68 @@
 package com.grupo1software.youngmiracles.service.impl;
 
+import com.grupo1software.youngmiracles.dto.AuthResponseDTO;
+import com.grupo1software.youngmiracles.dto.LoginDTO;
 import com.grupo1software.youngmiracles.dto.UsuarioDTO;
+import com.grupo1software.youngmiracles.exception.BadRequestException;
 import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
+import com.grupo1software.youngmiracles.exception.RoleNotFoundException;
 import com.grupo1software.youngmiracles.mapper.UsuarioMapper;
-import com.grupo1software.youngmiracles.model.entity.AdultoMayor;
-import com.grupo1software.youngmiracles.model.entity.Familiar;
-import com.grupo1software.youngmiracles.model.entity.Usuario;
-import com.grupo1software.youngmiracles.model.entity.Voluntario;
+import com.grupo1software.youngmiracles.model.entity.*;
+import com.grupo1software.youngmiracles.model.enums.ERole;
+import com.grupo1software.youngmiracles.repository.RoleRepository;
 import com.grupo1software.youngmiracles.repository.UsuarioRepository;
+import com.grupo1software.youngmiracles.security.UserPrincipal;
 import com.grupo1software.youngmiracles.service.AdminUsuarioService;
 import lombok.RequiredArgsConstructor;
+import com.grupo1software.youngmiracles.security.TokenProvider;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class AdminUsuarioServiceImpl implements AdminUsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final RoleRepository roleRepository;
     private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final TokenProvider tokenProvider;
+    private UsuarioDTO registerUserWithRole(UsuarioDTO registrationDTO, ERole roleEnum) {
+        boolean existsByEmail = usuarioRepository.existsByCorreo(registrationDTO.getCorreo());
+        if(existsByEmail){
+            throw new BadRequestException("El correo ya esta registrado");
+        }
+        Role role = roleRepository.findByNombre(roleEnum)
+                .orElseThrow(() -> new RoleNotFoundException("Error: Role is not found."));
+
+        registrationDTO.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
+
+        Usuario usuario = usuarioMapper.toEntity(registrationDTO);
+        usuario.setRole(role);
+        usuario.setFechaRegistro(LocalDateTime.now());
+        Usuario savedUser = usuarioRepository.save(usuario);
+
+        return usuarioMapper.toDTO(savedUser);
+    }
 
 
     @Transactional
     @Override
-    public UsuarioDTO createUsuario(UsuarioDTO usuarioDTO) {
-        Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
-        usuario.setFechaRegistro(LocalDateTime.now());
-        Usuario usuarioCreado= usuarioRepository.save(usuario);
-        return usuarioMapper.toDTO(usuarioCreado);
+    public UsuarioDTO createUsuarioCustomer(UsuarioDTO usuarioDTO) {
+        return registerUserWithRole(usuarioDTO, ERole.CUSTOMER);
+    }
+    @Transactional
+    @Override
+    public UsuarioDTO createUsuarioAdmin(UsuarioDTO usuarioDTO) {
+        return registerUserWithRole(usuarioDTO, ERole.ADMIN);
     }
 
     @Transactional (readOnly = true)
@@ -67,6 +100,27 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
             default -> throw new IllegalArgumentException("Tipo de usuario no soportado");
         }
         return usuarioMapper.toDTO(usuarioRepository.save(usuarioExistente));
+    }
+
+    @Override
+    public AuthResponseDTO login(LoginDTO loginDTO) {
+        // Autenticar al usuario utilizando AuthenticationManager
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDTO.getCorreo(), loginDTO.getContrasena())
+        );
+
+        // Una vez autenticado, el objeto autentication contiene la informacion del usuario autenticado
+        UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
+        Usuario usuario = userPrincipal.getUsuario();
+
+        // Verificar si es un administrador
+        boolean isAdmin = usuario.getRole().getNombre().equals(ERole.ADMIN);
+
+        //String token = "abc123";
+        // Generar el token JWT usando el TokenProvider
+        String token = tokenProvider.createAccessToken(authentication);
+        AuthResponseDTO responseDTO=usuarioMapper.toauthResponseDTO(usuario,token);
+        return responseDTO;
     }
 
     @Transactional

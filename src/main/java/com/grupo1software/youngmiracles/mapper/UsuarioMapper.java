@@ -1,9 +1,6 @@
 package com.grupo1software.youngmiracles.mapper;
 
-import com.grupo1software.youngmiracles.dto.AdultoMayorDTO;
-import com.grupo1software.youngmiracles.dto.FamiliarDTO;
-import com.grupo1software.youngmiracles.dto.UsuarioDTO;
-import com.grupo1software.youngmiracles.dto.VoluntarioDTO;
+import com.grupo1software.youngmiracles.dto.*;
 import com.grupo1software.youngmiracles.model.entity.AdultoMayor;
 import com.grupo1software.youngmiracles.model.entity.Familiar;
 import com.grupo1software.youngmiracles.model.entity.Voluntario;
@@ -49,6 +46,15 @@ public class UsuarioMapper {
         }else{
             throw new IllegalArgumentException("Tipo de usuario no soportado");
         }
+    }
+    public AuthResponseDTO toauthResponseDTO(Usuario usuario,String token) {
+        AuthResponseDTO authResponseDTO = new AuthResponseDTO();
+        authResponseDTO.setToken(token);
+        authResponseDTO.setNombre(usuario.getNombre());
+        authResponseDTO.setApellido_paterno(usuario.getApellido_paterno());
+        authResponseDTO.setApellido_materno(usuario.getApellido_materno());
+        authResponseDTO.setRole(usuario.getRole().getNombre().toString());
+        return authResponseDTO;
     }
 
 }
