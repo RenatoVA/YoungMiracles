@@ -51,6 +51,15 @@ public class AdminFacturaServiceImpl implements AdminFacturaService {
     }
 
     @Override
+    public FacturaResponseDTO confirmPurchase(Long id) {
+        Factura factura=facturaRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Factura no encontrada con el ID: "+id));
+
+        factura.setPaymentStatus(PaymentStatus.PAID);
+        Factura savedFactura=facturaRepository.save(factura);
+        return facturaMapper.tofacturaResponseDTO(savedFactura);
+    }
+
+    @Override
     public void deleteFactura(Long id) {
         facturaRepository.deleteById(id);
     }
