@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class FisioterapiaDTO extends SesionDTO {
+public class FisioterapiaDTO extends SesionCreateUpdateDTO {
     @NotBlank(message= "El tipo de fisioterapia es obligatoria")
     private String tipoFisioterapia;
     @NotBlank(message= "Las observaciones son obligatorias")

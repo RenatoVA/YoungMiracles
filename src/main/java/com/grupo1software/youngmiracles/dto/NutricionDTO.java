@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class NutricionDTO extends SesionDTO {
+public class NutricionDTO extends SesionCreateUpdateDTO {
     @NotBlank(message= "Las indicaciones son obligatorias")
     private String indicaciones;
     @NotBlank(message= "La receta es obligatoria")

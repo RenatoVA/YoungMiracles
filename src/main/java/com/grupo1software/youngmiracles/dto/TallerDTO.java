@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TallerDTO extends SesionDTO{
+public class TallerDTO extends SesionCreateUpdateDTO {
     @NotBlank(message= "La descripcion es obligatoria")
     private String descripcion;
     @NotNull(message= "La capacidad maxima es obligatoria")

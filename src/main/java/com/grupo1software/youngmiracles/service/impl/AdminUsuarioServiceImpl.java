@@ -36,10 +36,13 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
     private UsuarioDTO registerUserWithRole(UsuarioDTO registrationDTO, ERole roleEnum) {
+        System.out.println(roleEnum);
         boolean existsByEmail = usuarioRepository.existsByCorreo(registrationDTO.getCorreo());
         if(existsByEmail){
             throw new BadRequestException("El correo ya esta registrado");
         }
+        List<Role> roles=roleRepository.findAll();
+        roles.forEach(System.out::println);
         Role role = roleRepository.findByNombre(roleEnum)
                 .orElseThrow(() -> new RoleNotFoundException("Error: Role is not found."));
 

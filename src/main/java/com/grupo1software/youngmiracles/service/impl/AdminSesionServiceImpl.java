@@ -1,14 +1,13 @@
 package com.grupo1software.youngmiracles.service.impl;
 
-import com.grupo1software.youngmiracles.dto.SesionDTO;
+import com.grupo1software.youngmiracles.dto.SesionCreateUpdateDTO;
+import com.grupo1software.youngmiracles.dto.SesionResponseDTO;
 import com.grupo1software.youngmiracles.exception.BadRequestException;
 import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.mapper.SesionMapper;
-import com.grupo1software.youngmiracles.model.entity.Fisioterapia;
-import com.grupo1software.youngmiracles.model.entity.Nutricion;
-import com.grupo1software.youngmiracles.model.entity.Sesion;
-import com.grupo1software.youngmiracles.model.entity.Taller;
+import com.grupo1software.youngmiracles.model.entity.*;
 import com.grupo1software.youngmiracles.repository.SesionRepository;
+import com.grupo1software.youngmiracles.repository.UsuarioRepository;
 import com.grupo1software.youngmiracles.service.AdminSesionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,32 +23,37 @@ public class AdminSesionServiceImpl implements AdminSesionService {
     private final SesionRepository sesionRepository;
 
     private final SesionMapper sesionMapper;
+    private final UsuarioRepository usuarioRepository;
 
     @Transactional
     @Override
-    public SesionDTO createSesion(SesionDTO sesionDTO) {
-        Sesion sesion = sesionMapper.toEntity(sesionDTO);
+    public SesionResponseDTO createSesion(SesionCreateUpdateDTO sesionCreateUpdateDTO) {
+        Sesion sesion = sesionMapper.toEntity(sesionCreateUpdateDTO);
         sesion.setFechaRegistro(LocalDateTime.now());
+        AdultoMayor adultoMayor= (AdultoMayor) usuarioRepository.findById(sesionCreateUpdateDTO.getAdultoMayorId()).orElseThrow(() -> new ResourceNotFoundException("AdultoMayor no encontrado con el ID: " + sesionCreateUpdateDTO.getAdultoMayorId()));
+        Voluntario voluntario= (Voluntario) usuarioRepository.findById(sesionCreateUpdateDTO.getVoluntarioId()).orElseThrow(() -> new ResourceNotFoundException("Voluntario no encontrado con el ID: " + sesionCreateUpdateDTO.getVoluntarioId()));
+        sesion.setAdultoMayor(adultoMayor);
+        sesion.setVoluntario(voluntario);
         Sesion sesioncreada=sesionRepository.save(sesion);
+        System.out.println(sesion);
         return sesionMapper.toDTO(sesioncreada);
-
     }
 
     @Transactional(readOnly = true)
     @Override
-    public SesionDTO getSesionById(Long id) {
+    public SesionResponseDTO getSesionById(Long id) {
         return sesionMapper.toDTO(sesionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Sesion no encontrada con el ID: " + id)));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<SesionDTO> getAllSesions() {
+    public List<SesionResponseDTO> getAllSesions() {
         return sesionRepository.findAll().stream().map(sesionMapper::toDTO).toList();
     }
 
     @Transactional
     @Override
-    public SesionDTO updateSesion(Long id, SesionDTO sesionactualizadoDTO) {
+    public SesionResponseDTO updateSesion(Long id, SesionCreateUpdateDTO sesionactualizadoDTO) {
 
         Sesion sesionexistente=sesionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Sesion no encontrado con el ID: " + id));
 
@@ -85,14 +89,14 @@ public class AdminSesionServiceImpl implements AdminSesionService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<SesionDTO> getSesionsByAdultoMayor(Long adultoMayorId) {
+    public List<SesionResponseDTO> getSesionsByAdultoMayor(Long adultoMayorId) {
         return sesionRepository.findByAdultoMayorId(adultoMayorId).stream().map(sesionMapper::toDTO).toList();
     }
 
 
     @Transactional(readOnly = true)
     @Override
-    public List<SesionDTO> getSesionsByVoluntario(Long voluntarioId) {
+    public List<SesionResponseDTO> getSesionsByVoluntario(Long voluntarioId) {
         return sesionRepository.findByVoluntarioId(voluntarioId).stream().map(sesionMapper::toDTO).toList();
     }
 

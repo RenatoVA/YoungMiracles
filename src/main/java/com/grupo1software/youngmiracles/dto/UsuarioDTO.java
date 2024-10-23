@@ -34,6 +34,4 @@ public class UsuarioDTO {
     @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String correo;
-    @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
-    private LocalDateTime fechaRegistro;
 }

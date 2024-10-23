@@ -1,5 +1,6 @@
 package com.grupo1software.youngmiracles.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.grupo1software.youngmiracles.model.entity.*;
@@ -21,18 +22,16 @@ import java.time.LocalDateTime;
         @JsonSubTypes.Type(value = NutricionDTO.class, name = "nutricion"),
 
 })
-public class SesionDTO {
+public class SesionCreateUpdateDTO {
 
-    private Long id;
-    private LocalDateTime fechaRegistro;
     @NotNull(message= "La fecha es obligatorio es obligatorio")
     private LocalDateTime fecha;
     @NotBlank (message= "El estado es obligatorio")
     private String estado;
     @NotNull (message= "El id del adulto mayor es obligatorio")
-    private AdultoMayor adultoMayor;
+    private Long adultoMayorId;
     @NotNull(message= "El id del voluntario es obligatorio")
-    private Voluntario voluntario;
+    private Long voluntarioId;
     @NotNull (message= "El nombre es obligatorio")
     private Integer duracion;
 }
