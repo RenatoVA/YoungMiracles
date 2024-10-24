@@ -1,18 +1,12 @@
 package com.grupo1software.youngmiracles.service;
 
-import com.grupo1software.youngmiracles.model.entity.ConsultaNutricion;
+import com.grupo1software.youngmiracles.dto.ConsultaNutricionDTO;
 import java.util.List;
 
 public interface ConsultaNutricionService {
-
-    ConsultaNutricion createConsulta(ConsultaNutricion consultaNutricion);
-
-    ConsultaNutricion getConsultaById(Long id);
-
-    List<ConsultaNutricion> getAllConsultas();
-
-    List<ConsultaNutricion> listarConsultasPorAdultoMayor(Long adultoMayorId);
-
-    ConsultaNutricion updateConsulta(Long id, ConsultaNutricion consultaNutricion);
-
+    ConsultaNutricionDTO crearConsulta(ConsultaNutricionDTO consultaNutricionDTO);
+    ConsultaNutricionDTO getConsultaById(Long id);
+    List<ConsultaNutricionDTO> getAllConsultas();
+    List<ConsultaNutricionDTO> listarConsultasPorAdultoMayor(Long adultoMayorId);
+    ConsultaNutricionDTO updateConsulta(Long id, ConsultaNutricionDTO consultaNutricionDTO);
 }
