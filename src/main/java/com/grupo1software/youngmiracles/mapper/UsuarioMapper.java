@@ -54,6 +54,14 @@ public class UsuarioMapper {
         authResponseDTO.setApellido_paterno(usuario.getApellido_paterno());
         authResponseDTO.setApellido_materno(usuario.getApellido_materno());
         authResponseDTO.setRole(usuario.getRole().getNombre().toString());
+        if (usuario instanceof Voluntario) {
+            Voluntario voluntario = (Voluntario) usuario;
+            if (voluntario.getEspecialidad() != null) {
+                authResponseDTO.setTypeuser("voluntario");
+            }
+        } else {
+            authResponseDTO.setTypeuser("adultomayor");
+        }
         return authResponseDTO;
     }
 

@@ -9,4 +9,6 @@ public class AuthResponseDTO {
     private String apellido_paterno;
     private String apellido_materno;
     private String role;
+    private String typeuser;
+
 }
