@@ -12,6 +12,6 @@ public interface AdminUsuarioService {
     UsuarioDTO getUsuarioById(Long id);
     List<UsuarioDTO> getAllUsuarios();
     UsuarioDTO updateUsuario(Long id, UsuarioDTO usuarioactualizadoDTO);
-    AuthResponseDTO login(LoginDTO loginDTO);
+    UsuarioDTO login(LoginDTO loginDTO);
     void deleteUsuario(Long id);
 }

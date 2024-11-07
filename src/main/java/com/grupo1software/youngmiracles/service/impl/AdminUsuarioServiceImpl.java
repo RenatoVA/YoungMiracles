@@ -46,14 +46,30 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
         Role role = roleRepository.findByNombre(roleEnum)
                 .orElseThrow(() -> new RoleNotFoundException("Error: Role is not found."));
 
+        String rawpassword=registrationDTO.getPassword();
         registrationDTO.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
 
         Usuario usuario = usuarioMapper.toEntity(registrationDTO);
         usuario.setRole(role);
         usuario.setFechaRegistro(LocalDateTime.now());
-        Usuario savedUser = usuarioRepository.save(usuario);
+        Usuario saveduser =usuarioRepository.save(usuario);
+        System.out.println(saveduser);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(registrationDTO.getCorreo(), rawpassword)
+        );
+        UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
+        Usuario usuarionuevo = userPrincipal.getUsuario();
+        System.out.println(usuarionuevo);
 
-        return usuarioMapper.toDTO(savedUser);
+        boolean isAdmin = usuarionuevo.getRole().getNombre().equals(ERole.ADMIN);
+
+        //String token = "abc123";
+        // Generar el token JWT usando el TokenProvider
+        String token = tokenProvider.createAccessToken(authentication);
+        UsuarioDTO usuarioDTO=usuarioMapper.toDTO(usuarionuevo);
+        usuarioDTO.setToken(token);
+        usuarioDTO.setRole(usuarionuevo.getRole().getNombre().toString());
+        return usuarioDTO;
     }
 
 
@@ -106,7 +122,7 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
     }
 
     @Override
-    public AuthResponseDTO login(LoginDTO loginDTO) {
+    public UsuarioDTO login(LoginDTO loginDTO) {
         // Autenticar al usuario utilizando AuthenticationManager
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getCorreo(), loginDTO.getContrasena())
@@ -122,8 +138,10 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
         //String token = "abc123";
         // Generar el token JWT usando el TokenProvider
         String token = tokenProvider.createAccessToken(authentication);
-        AuthResponseDTO responseDTO=usuarioMapper.toauthResponseDTO(usuario,token);
-        return responseDTO;
+        UsuarioDTO usuarioDTO=usuarioMapper.toDTO(usuario);
+        usuarioDTO.setToken(token);
+        usuarioDTO.setRole(usuario.getRole().getNombre().toString());
+        return usuarioDTO;
     }
 
     @Transactional

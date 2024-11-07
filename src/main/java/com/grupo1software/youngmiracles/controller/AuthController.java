@@ -28,8 +28,8 @@ public class AuthController {
         return new ResponseEntity<>(usuarioDTO1, HttpStatus.CREATED);
     }
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
-        AuthResponseDTO authResponseDTO = adminUsuarioService.login(loginDTO);
+    public ResponseEntity<UsuarioDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
+        UsuarioDTO authResponseDTO = adminUsuarioService.login(loginDTO);
         return new ResponseEntity<>(authResponseDTO, HttpStatus.OK);
     }
 }
