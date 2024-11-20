@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -94,6 +95,17 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
     @Override
     public List<UsuarioDTO> getAllUsuarios() {
         return usuarioRepository.findAll().stream().map(usuarioMapper::toDTO).toList();
+    }
+    @Transactional (readOnly = true)
+    @Override
+    public List<UsuarioDTO> getAllVoluntarios() {
+        List<Usuario> voluntarios = new ArrayList<>();
+        for (Usuario usuario : usuarioRepository.findAll()) {
+            if (usuario instanceof Voluntario) {
+                voluntarios.add(usuario);
+            }
+        }
+        return voluntarios.stream().map(usuarioMapper::toDTO).toList();
     }
 
     @Transactional

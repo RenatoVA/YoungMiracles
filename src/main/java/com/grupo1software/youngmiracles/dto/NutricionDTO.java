@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 public class NutricionDTO extends SesionCreateUpdateDTO {
     @NotBlank(message= "Las indicaciones son obligatorias")
     private String indicaciones;
-    @NotBlank(message= "La receta es obligatoria")
+    @NotBlank(message = "La receta es obligatoria")
     private String receta;
 }
 

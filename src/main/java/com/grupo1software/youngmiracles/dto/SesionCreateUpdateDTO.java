@@ -9,7 +9,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Data
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -24,10 +27,10 @@ import java.time.LocalDateTime;
 })
 public class SesionCreateUpdateDTO {
 
-    @NotNull(message= "La fecha es obligatorio es obligatorio")
-    private LocalDateTime fecha;
     @NotBlank (message= "El estado es obligatorio")
     private String estado;
+    @NotNull (message= "La hora es obligatorio")
+    private Long horarioId;
     @NotNull (message= "El id del adulto mayor es obligatorio")
     private Long adultoMayorId;
     @NotNull(message= "El id del voluntario es obligatorio")

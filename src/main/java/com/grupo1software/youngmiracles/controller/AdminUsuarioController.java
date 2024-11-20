@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/usuarios")
+@CrossOrigin(origins={"http://localhost:4200/"})
 public class AdminUsuarioController {
     private final AdminUsuarioService adminUsuarioService;
     @GetMapping("/{id}")
@@ -28,6 +29,11 @@ public class AdminUsuarioController {
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> getAllUsuarios() {
         List<UsuarioDTO> usuarios = adminUsuarioService.getAllUsuarios();
+        return new ResponseEntity<>(usuarios, HttpStatus.OK);
+    }
+    @GetMapping("/voluntarios")
+    public ResponseEntity<List<UsuarioDTO>> getAllVoluntarios() {
+        List<UsuarioDTO> usuarios = adminUsuarioService.getAllVoluntarios();
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 

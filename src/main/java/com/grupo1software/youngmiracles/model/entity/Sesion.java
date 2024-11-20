@@ -2,7 +2,10 @@ package com.grupo1software.youngmiracles.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @Entity
@@ -13,8 +16,11 @@ public class Sesion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime fechaRegistro;
-    private LocalDateTime fecha;
+    private LocalDate fechaRegistro;
+    @ManyToOne()
+    @JoinColumn(name = "horario_id", referencedColumnName = "id",foreignKey = @ForeignKey(name="FK_SESION_HORARIO"))
+    private Horario horario;
+    private LocalDate fecha;
     private String estado;
     @ManyToOne
     @JoinColumn(name = "adulto_mayor_id", referencedColumnName = "id",foreignKey = @ForeignKey(name="FK_SESION_ADULTOMAYOR"))

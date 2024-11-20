@@ -1,5 +1,7 @@
 package com.grupo1software.youngmiracles.controller;
 
+import com.grupo1software.youngmiracles.dto.CreateUpdateHorarioDTO;
+import com.grupo1software.youngmiracles.dto.HorarioResponseDTO;
 import com.grupo1software.youngmiracles.model.entity.Horario;
 import com.grupo1software.youngmiracles.service.AdminHorarioService;
 import jakarta.validation.Valid;
@@ -13,37 +15,44 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/horarios")
+@CrossOrigin(origins={"http://localhost:4200/"})
 public class AdminHorarioController {
     private final AdminHorarioService adminHorarioService;
 
     @PostMapping
-    public ResponseEntity<Horario> createHorario(@Valid @RequestBody Horario horario) {
-        Horario nuevoHorario = adminHorarioService.createHorario(horario);
+    public ResponseEntity<HorarioResponseDTO> createHorario(@Valid @RequestBody CreateUpdateHorarioDTO horario) {
+        HorarioResponseDTO nuevoHorario = adminHorarioService.createHorario(horario);
         return new ResponseEntity<>(nuevoHorario, HttpStatus.CREATED);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Horario> getHorario(@PathVariable Long id) {
-        Horario horario = adminHorarioService.getHorarioById(id);
+    public ResponseEntity<HorarioResponseDTO> getHorario(@PathVariable Long id) {
+        HorarioResponseDTO horario = adminHorarioService.getHorarioById(id);
         if (horario != null) {
             return new ResponseEntity<>(horario, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     @GetMapping
-    public ResponseEntity<List<Horario>> getAllHorarios() {
-        List<Horario> horarios = adminHorarioService.getAllHorarios();
+    public ResponseEntity<List<HorarioResponseDTO>> getAllHorarios() {
+        List<HorarioResponseDTO> horarios = adminHorarioService.getAllHorarios();
+        return new ResponseEntity<>(horarios, HttpStatus.OK);
+    }
+
+    @GetMapping("/especialidad/{especialidad}")
+    public ResponseEntity<List<HorarioResponseDTO>> getAllHorariosByEspecialidad(@PathVariable String especialidad) {
+        List<HorarioResponseDTO> horarios = adminHorarioService.getHorariosByespecialidad(especialidad);
         return new ResponseEntity<>(horarios, HttpStatus.OK);
     }
 
     @GetMapping("/voluntario/{voluntarioId}")
-    public ResponseEntity<List<Horario>> getHorariosByVoluntarioId(@PathVariable Long voluntarioId) {
-        List<Horario> horarios = adminHorarioService.getHorariosByVoluntario(voluntarioId);
+    public ResponseEntity<List<HorarioResponseDTO>> getHorariosByVoluntarioId(@PathVariable Long voluntarioId) {
+        List<HorarioResponseDTO> horarios = adminHorarioService.getHorariosByVoluntario(voluntarioId);
         return new ResponseEntity<>(horarios, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Horario> updateHorario(@PathVariable Long id, @Valid @RequestBody Horario horario) {
-        Horario updatedhorario = adminHorarioService.updateHorario(id, horario);
+    public ResponseEntity<HorarioResponseDTO> updateHorario(@PathVariable Long id, @Valid @RequestBody CreateUpdateHorarioDTO horario) {
+        HorarioResponseDTO updatedhorario = adminHorarioService.updateHorario(id, horario);
         if (updatedhorario != null) {
             return new ResponseEntity<>(updatedhorario, HttpStatus.OK);
         }

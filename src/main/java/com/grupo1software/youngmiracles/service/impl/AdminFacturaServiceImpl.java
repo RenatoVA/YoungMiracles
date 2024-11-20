@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,6 +32,12 @@ public class AdminFacturaServiceImpl implements AdminFacturaService {
     @Override
     public FacturaResponseDTO getFactura(Long id) {
         return facturaMapper.tofacturaResponseDTO(facturaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Factura no encontrada con el ID: " + id)));
+    }
+
+    @Override
+    public List<FacturaResponseDTO> getAllFacturas() {
+        List<Factura> facturas = facturaRepository.findAll();
+        return facturas.stream().map(facturaMapper::tofacturaResponseDTO).toList();
     }
 
     @Override

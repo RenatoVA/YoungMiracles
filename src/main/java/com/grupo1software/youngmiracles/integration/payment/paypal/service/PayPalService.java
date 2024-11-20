@@ -79,7 +79,6 @@ public class PayPalService {
         purchaseUnit.setAmount(amount);
 
         orderRequest.setPurchaseUnits(Collections.singletonList(purchaseUnit));
-
         ApplicationContext applicationContext = ApplicationContext.builder()
                 .brandName("Youngmiracles")
                 .returnURL(returnUrl)

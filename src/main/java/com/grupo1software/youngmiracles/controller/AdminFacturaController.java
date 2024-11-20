@@ -10,9 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/facturas")
+@CrossOrigin(origins={"http://localhost:4200/"})
 public class AdminFacturaController {
 
     private final AdminFacturaService adminFacturaService;
@@ -25,12 +28,18 @@ public class AdminFacturaController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    @GetMapping()
+    public ResponseEntity<List<FacturaResponseDTO>> getFacturas() {
+        List<FacturaResponseDTO> facturas = adminFacturaService.getAllFacturas();
+        return new ResponseEntity<>(facturas, HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<FacturaResponseDTO> createFactura(@Valid @RequestBody FacturaCreateUpdateDTO facturaCreateUpdateDTO){
         FacturaResponseDTO factura = adminFacturaService.createFactura(facturaCreateUpdateDTO);
         return new ResponseEntity<>(factura, HttpStatus.CREATED);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<FacturaResponseDTO> deleteFactura(@PathVariable Long id){

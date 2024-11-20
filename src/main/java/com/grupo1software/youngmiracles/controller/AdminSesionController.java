@@ -2,6 +2,7 @@ package com.grupo1software.youngmiracles.controller;
 
 import com.grupo1software.youngmiracles.dto.SesionCreateUpdateDTO;
 import com.grupo1software.youngmiracles.dto.SesionResponseDTO;
+import com.grupo1software.youngmiracles.dto.SesionUpdateStateDTO;
 import com.grupo1software.youngmiracles.service.AdminSesionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/sesiones")
+@CrossOrigin(origins={"http://localhost:4200/"})
 @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
+
 public class AdminSesionController {
     private final AdminSesionService adminSesionService;
 
@@ -47,6 +50,12 @@ public class AdminSesionController {
             return new ResponseEntity<>(updatedSession, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @PatchMapping("/state")
+    public ResponseEntity<SesionUpdateStateDTO> updateState(@Valid @RequestBody SesionUpdateStateDTO sesionUpdateStateDTO)
+    {
+        adminSesionService.updateSesionState(sesionUpdateStateDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

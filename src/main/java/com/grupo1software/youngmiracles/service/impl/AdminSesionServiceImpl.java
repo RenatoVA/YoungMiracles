@@ -2,10 +2,12 @@ package com.grupo1software.youngmiracles.service.impl;
 
 import com.grupo1software.youngmiracles.dto.SesionCreateUpdateDTO;
 import com.grupo1software.youngmiracles.dto.SesionResponseDTO;
+import com.grupo1software.youngmiracles.dto.SesionUpdateStateDTO;
 import com.grupo1software.youngmiracles.exception.BadRequestException;
 import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.mapper.SesionMapper;
 import com.grupo1software.youngmiracles.model.entity.*;
+import com.grupo1software.youngmiracles.repository.HorarioRepository;
 import com.grupo1software.youngmiracles.repository.SesionRepository;
 import com.grupo1software.youngmiracles.repository.UsuarioRepository;
 import com.grupo1software.youngmiracles.service.AdminSesionService;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,16 +27,20 @@ public class AdminSesionServiceImpl implements AdminSesionService {
 
     private final SesionMapper sesionMapper;
     private final UsuarioRepository usuarioRepository;
+    private final HorarioRepository horarioRepository;
 
     @Transactional
     @Override
     public SesionResponseDTO createSesion(SesionCreateUpdateDTO sesionCreateUpdateDTO) {
         Sesion sesion = sesionMapper.toEntity(sesionCreateUpdateDTO);
-        sesion.setFechaRegistro(LocalDateTime.now());
+        sesion.setFechaRegistro(LocalDate.now());
         AdultoMayor adultoMayor= (AdultoMayor) usuarioRepository.findById(sesionCreateUpdateDTO.getAdultoMayorId()).orElseThrow(() -> new ResourceNotFoundException("AdultoMayor no encontrado con el ID: " + sesionCreateUpdateDTO.getAdultoMayorId()));
         Voluntario voluntario= (Voluntario) usuarioRepository.findById(sesionCreateUpdateDTO.getVoluntarioId()).orElseThrow(() -> new ResourceNotFoundException("Voluntario no encontrado con el ID: " + sesionCreateUpdateDTO.getVoluntarioId()));
+        Horario horario=  horarioRepository.findById(sesionCreateUpdateDTO.getHorarioId()).orElseThrow(() -> new ResourceNotFoundException("Horario no encontrado con el ID: " + sesionCreateUpdateDTO.getHorarioId()));
         sesion.setAdultoMayor(adultoMayor);
+        sesion.setHorario(horario);
         sesion.setVoluntario(voluntario);
+        sesion.setFecha(horario.getFecha());
         Sesion sesioncreada=sesionRepository.save(sesion);
         System.out.println(sesion);
         return sesionMapper.toDTO(sesioncreada);
@@ -60,25 +67,17 @@ public class AdminSesionServiceImpl implements AdminSesionService {
 
         Sesion sesionactualizado=sesionMapper.toEntity(sesionactualizadoDTO);
 
-        sesionexistente.setFecha(sesionactualizado.getFecha());
         sesionexistente.setEstado(sesionactualizado.getEstado());
-        sesionexistente.setDuracion(sesionactualizado.getDuracion());
-        sesionexistente.setVoluntario(sesionactualizado.getVoluntario());
-        sesionexistente.setAdultoMayor(sesionactualizado.getAdultoMayor());
-        sesionexistente.setDuracion(sesionactualizado.getDuracion());
-
-        switch (sesionexistente){
-            case Fisioterapia fisioterapia when sesionactualizado instanceof Fisioterapia ->
-                    updateFisioterapia(fisioterapia, (Fisioterapia) sesionactualizado);
-            case Taller taller when sesionactualizado instanceof Taller ->
-                    updateTaller(taller, (Taller) sesionactualizado);
-            case Nutricion nutricion when sesionactualizado instanceof Nutricion ->
-                    updateNutricion(nutricion, (Nutricion) sesionactualizado);
-            default -> throw new BadRequestException("Tipo de sesion no soportado");
-
-        }
 
         return sesionMapper.toDTO(sesionRepository.save(sesionexistente));
+    }
+
+    @Transactional
+    @Override
+    public void updateSesionState(SesionUpdateStateDTO sesionUpdateStateDTO){
+        Sesion sesionexistente=sesionRepository.findById(sesionUpdateStateDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Sesion no encontrado con el ID: " + sesionUpdateStateDTO.getId()));
+        sesionexistente.setEstado(sesionUpdateStateDTO.getState());
+        sesionRepository.save(sesionexistente);
     }
 
     @Transactional
