@@ -37,6 +37,7 @@ public class AdminSesionServiceImpl implements AdminSesionService {
         AdultoMayor adultoMayor= (AdultoMayor) usuarioRepository.findById(sesionCreateUpdateDTO.getAdultoMayorId()).orElseThrow(() -> new ResourceNotFoundException("AdultoMayor no encontrado con el ID: " + sesionCreateUpdateDTO.getAdultoMayorId()));
         Voluntario voluntario= (Voluntario) usuarioRepository.findById(sesionCreateUpdateDTO.getVoluntarioId()).orElseThrow(() -> new ResourceNotFoundException("Voluntario no encontrado con el ID: " + sesionCreateUpdateDTO.getVoluntarioId()));
         Horario horario=  horarioRepository.findById(sesionCreateUpdateDTO.getHorarioId()).orElseThrow(() -> new ResourceNotFoundException("Horario no encontrado con el ID: " + sesionCreateUpdateDTO.getHorarioId()));
+        horario.setDisponibilidad("ocupado");
         sesion.setAdultoMayor(adultoMayor);
         sesion.setHorario(horario);
         sesion.setVoluntario(voluntario);
@@ -77,7 +78,16 @@ public class AdminSesionServiceImpl implements AdminSesionService {
     public void updateSesionState(SesionUpdateStateDTO sesionUpdateStateDTO){
         Sesion sesionexistente=sesionRepository.findById(sesionUpdateStateDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Sesion no encontrado con el ID: " + sesionUpdateStateDTO.getId()));
         sesionexistente.setEstado(sesionUpdateStateDTO.getState());
+        Horario horario=horarioRepository.findById(sesionUpdateStateDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Horario no encontrado con el ID:"+sesionexistente.getHorario().getId()));
+        if (sesionUpdateStateDTO.getState()=="cancelado")
+        {
+            horario.setDisponibilidad("disponible");
+        }
+        if(sesionUpdateStateDTO.getState()=="completado"){
+            horario.setDisponibilidad("terminado");
+        }
         sesionRepository.save(sesionexistente);
+        horarioRepository.save(horario);
     }
 
     @Transactional

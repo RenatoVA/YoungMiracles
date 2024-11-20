@@ -15,4 +15,5 @@ public class HorarioResponseDTO {
     private Long voluntario_id;
     private String voluntario_nombre;
     private String voluntario_especialidad;
+    private String disponibilidad;
 }

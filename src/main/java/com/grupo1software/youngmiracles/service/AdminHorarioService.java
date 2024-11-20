@@ -13,5 +13,6 @@ public interface AdminHorarioService {
     List<HorarioResponseDTO> getHorariosByVoluntario(Long voluntarioId);
     List<HorarioResponseDTO> getHorariosByespecialidad(String especialidad);
     HorarioResponseDTO updateHorario(Long id, CreateUpdateHorarioDTO horario);
+    void changeHorarioState(Long id, String state);
     void deleteHorario(Long id);
 }

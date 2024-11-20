@@ -21,6 +21,7 @@ public class HorarioMapper {
         horarioResponseDTO.setId(horario.getId());
         horarioResponseDTO.setHora_inicio(horario.getHora_inicio());
         horarioResponseDTO.setHora_fin(horario.getHora_fin());
+        horarioResponseDTO.setDisponibilidad(horario.getDisponibilidad());
         horarioResponseDTO.setVoluntario_id(horario.getVoluntario().getId());
         horarioResponseDTO.setVoluntario_nombre(horario.getVoluntario().getNombre()+' '+horario.getVoluntario().getApellido_paterno()+' '+horario.getVoluntario().getApellido_materno());
         horarioResponseDTO.setVoluntario_especialidad(horario.getVoluntario().getEspecialidad());

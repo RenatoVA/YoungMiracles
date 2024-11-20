@@ -32,6 +32,7 @@ public class AdminHorarioServiceImpl implements AdminHorarioService {
         Voluntario voluntario = (Voluntario) usuarioRepository.findById(createUpdateHorarioDTO.getVoluntario_id())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado o no es un voluntario"));
         Horario nuevohorario=horarioMapper.toEntity(createUpdateHorarioDTO,voluntario);
+        nuevohorario.setDisponibilidad("disponible");
         return horarioMapper.toDTO(horarioRepository.save(nuevohorario));
     }
 
@@ -88,6 +89,13 @@ public class AdminHorarioServiceImpl implements AdminHorarioService {
             return horarioMapper.toDTO(horarioRepository.save(h));
         }
         return null;
+    }
+
+    @Override
+    public void changeHorarioState(Long id, String state) {
+        Horario horario=horarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Horario no encontrado con el ID: " + id));
+        horario.setDisponibilidad(state);
+        horarioRepository.save(horario);
     }
 
     @Transactional
