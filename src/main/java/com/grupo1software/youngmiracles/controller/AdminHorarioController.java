@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/horarios")
-@CrossOrigin(origins={"http://localhost:4200/"})
+
 public class AdminHorarioController {
     private final AdminHorarioService adminHorarioService;
 

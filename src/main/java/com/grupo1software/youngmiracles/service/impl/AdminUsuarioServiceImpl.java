@@ -1,8 +1,6 @@
 package com.grupo1software.youngmiracles.service.impl;
 
-import com.grupo1software.youngmiracles.dto.AuthResponseDTO;
-import com.grupo1software.youngmiracles.dto.LoginDTO;
-import com.grupo1software.youngmiracles.dto.UsuarioDTO;
+import com.grupo1software.youngmiracles.dto.*;
 import com.grupo1software.youngmiracles.exception.BadRequestException;
 import com.grupo1software.youngmiracles.exception.ResourceNotFoundException;
 import com.grupo1software.youngmiracles.exception.RoleNotFoundException;
@@ -110,27 +108,17 @@ public class AdminUsuarioServiceImpl implements AdminUsuarioService {
 
     @Transactional
     @Override
-    public UsuarioDTO updateUsuario(Long id, UsuarioDTO usuarioactualizadoDTO) {
+    public UpdateUsuarioResponseDTO updateUsuario(Long id, UsuarioUpdateDTO usuarioactualizadoDTO) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con el ID: " + id));
 
-        Usuario usuarioActualizado = usuarioMapper.toEntity(usuarioactualizadoDTO);
-        usuarioExistente.setNombre(usuarioActualizado.getNombre());
-        usuarioExistente.setApellido_paterno(usuarioActualizado.getApellido_paterno());
-        usuarioExistente.setApellido_materno(usuarioActualizado.getApellido_materno());
-        usuarioExistente.setEdad(usuarioActualizado.getEdad());
-        usuarioExistente.setGenero(usuarioActualizado.getGenero());
-        usuarioExistente.setCorreo(usuarioActualizado.getCorreo());
-        switch (usuarioExistente) {
-            case AdultoMayor adultoMayor when usuarioActualizado instanceof AdultoMayor ->
-                    updateAdultoMayor(adultoMayor, (AdultoMayor) usuarioActualizado);
-            case Voluntario voluntario when usuarioActualizado instanceof Voluntario ->
-                    updateVoluntario(voluntario, (Voluntario) usuarioActualizado);
-            case Familiar familiar when usuarioActualizado instanceof Familiar ->
-                    updateFamiliar(familiar, (Familiar) usuarioActualizado);
-            default -> throw new IllegalArgumentException("Tipo de usuario no soportado");
-        }
-        return usuarioMapper.toDTO(usuarioRepository.save(usuarioExistente));
+        usuarioExistente.setNombre(usuarioactualizadoDTO.getNombre());
+        usuarioExistente.setApellido_paterno(usuarioactualizadoDTO.getApellido_paterno());
+        usuarioExistente.setApellido_materno(usuarioactualizadoDTO.getApellido_materno());
+        usuarioExistente.setEdad(usuarioactualizadoDTO.getEdad());
+        usuarioExistente.setGenero(usuarioactualizadoDTO.getGenero());
+        usuarioExistente.setCorreo(usuarioactualizadoDTO.getCorreo());
+        return usuarioMapper.toupdateResponseDTO(usuarioRepository.save(usuarioExistente));
     }
 
     @Override

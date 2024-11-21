@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/facturas")
-@CrossOrigin(origins={"http://localhost:4200/"})
+
 public class AdminFacturaController {
 
     private final AdminFacturaService adminFacturaService;
@@ -31,6 +31,11 @@ public class AdminFacturaController {
     @GetMapping()
     public ResponseEntity<List<FacturaResponseDTO>> getFacturas() {
         List<FacturaResponseDTO> facturas = adminFacturaService.getAllFacturas();
+        return new ResponseEntity<>(facturas, HttpStatus.OK);
+    }
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<List<FacturaResponseDTO>> getFacturasByUsuario(@PathVariable Long id) {
+        List<FacturaResponseDTO> facturas=adminFacturaService.getFacturasById(id);
         return new ResponseEntity<>(facturas, HttpStatus.OK);
     }
 

@@ -29,6 +29,7 @@ public class SesionMapper {
             fisioterapiaDTO.setEstado(sesion.getEstado());
             fisioterapiaDTO.setAdultomayorId(sesion.getAdultoMayor().getId());
             fisioterapiaDTO.setVoluntarioId(sesion.getVoluntario().getId());
+            fisioterapiaDTO.setTipoSesion("fisioterapia");
             fisioterapiaDTO.setAdultomayorNombre(sesion.getAdultoMayor().getNombre()+' '+sesion.getAdultoMayor().getApellido_paterno()+' '+sesion.getAdultoMayor().getApellido_materno());
             fisioterapiaDTO.setVoluntarioNombre(sesion.getVoluntario().getNombre()+' '+sesion.getVoluntario().getApellido_paterno()+' '+sesion.getVoluntario().getApellido_materno());
             return fisioterapiaDTO;
@@ -38,6 +39,7 @@ public class SesionMapper {
             tallerResponseDTO.setDuracion(sesion.getDuracion());
             tallerResponseDTO.setEstado(sesion.getEstado());
             tallerResponseDTO.setFecha(sesion.getFecha());
+            tallerResponseDTO.setTipoSesion("taller");
             tallerResponseDTO.setHorario(horarioMapper.toDTO(sesion.getHorario()));
             tallerResponseDTO.setAdultomayorId(sesion.getAdultoMayor().getId());
             tallerResponseDTO.setVoluntarioId(sesion.getVoluntario().getId());
@@ -54,6 +56,7 @@ public class SesionMapper {
             nutricionResponseDTO.setDuracion(sesion.getDuracion());
             nutricionResponseDTO.setEstado(sesion.getEstado());
             nutricionResponseDTO.setFecha(sesion.getFecha());
+            nutricionResponseDTO.setTipoSesion("nutricion");
             nutricionResponseDTO.setHorario(horarioMapper.toDTO(sesion.getHorario()));
             nutricionResponseDTO.setAdultomayorId(sesion.getAdultoMayor().getId());
             nutricionResponseDTO.setVoluntarioId(sesion.getVoluntario().getId());
@@ -70,7 +73,6 @@ public class SesionMapper {
         if(sesionCreateUpdateDTO instanceof FisioterapiaDTO){
             Fisioterapia fisioterapia= new Fisioterapia();
             fisioterapia.setEstado(sesionCreateUpdateDTO.getEstado());
-            fisioterapia.setDuracion(sesionCreateUpdateDTO.getDuracion());
             fisioterapia.setTipoFisioterapia(((FisioterapiaDTO) sesionCreateUpdateDTO).getTipoFisioterapia());
             fisioterapia.setObservaciones(((FisioterapiaDTO) sesionCreateUpdateDTO).getObservaciones());
 
@@ -78,7 +80,6 @@ public class SesionMapper {
         }else if (sesionCreateUpdateDTO instanceof TallerDTO){
             Taller taller= new Taller();
             taller.setEstado(sesionCreateUpdateDTO.getEstado());
-            taller.setDuracion(sesionCreateUpdateDTO.getDuracion());
             taller.setDescripcion(((TallerDTO) sesionCreateUpdateDTO).getDescripcion());
             taller.setCapacidadMaxima(((TallerDTO) sesionCreateUpdateDTO).getCapacidadMaxima());
             taller.setMaterialRequerido(((TallerDTO) sesionCreateUpdateDTO).getMaterialRequerido());
@@ -86,7 +87,6 @@ public class SesionMapper {
         }else if (sesionCreateUpdateDTO instanceof NutricionDTO){
             Nutricion nutricion= new Nutricion();
             nutricion.setEstado(sesionCreateUpdateDTO.getEstado());
-            nutricion.setDuracion(sesionCreateUpdateDTO.getDuracion());
             nutricion.setIndicaciones(((NutricionDTO) sesionCreateUpdateDTO).getIndicaciones());
             nutricion.setReceta(((NutricionDTO) sesionCreateUpdateDTO).getReceta());
             return nutricion;

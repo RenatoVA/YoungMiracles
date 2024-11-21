@@ -1,6 +1,8 @@
 package com.grupo1software.youngmiracles.controller;
 
+import com.grupo1software.youngmiracles.dto.UpdateUsuarioResponseDTO;
 import com.grupo1software.youngmiracles.dto.UsuarioDTO;
+import com.grupo1software.youngmiracles.dto.UsuarioUpdateDTO;
 import com.grupo1software.youngmiracles.service.AdminUsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin(origins={"http://localhost:4200/"})
 public class AdminUsuarioController {
     private final AdminUsuarioService adminUsuarioService;
     @GetMapping("/{id}")
@@ -38,8 +39,8 @@ public class AdminUsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioDTO usuario) {
-        UsuarioDTO updatedUsuario = adminUsuarioService.updateUsuario(id, usuario);
+    public ResponseEntity<UpdateUsuarioResponseDTO> updateUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioUpdateDTO usuario) {
+        UpdateUsuarioResponseDTO updatedUsuario = adminUsuarioService.updateUsuario(id, usuario);
         if (updatedUsuario != null) {
             return new ResponseEntity<>(updatedUsuario, HttpStatus.OK);
         }

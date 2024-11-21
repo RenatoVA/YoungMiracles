@@ -18,4 +18,5 @@ public class SesionResponseDTO {
     private Long voluntarioId;
     private String voluntarioNombre;
     private Integer duracion;
+    private String tipoSesion;
 }

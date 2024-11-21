@@ -38,10 +38,17 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         Usuario usuario = usuarioRepository.findByCorreo(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con email: " + email));
 
-        PasswordResetToken passwordResetToken = new PasswordResetToken();
-        passwordResetToken.setToken(UUID.randomUUID().toString());
-        passwordResetToken.setUsuario(usuario);
-        passwordResetToken.setExpiration(10);
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByUsuario_id(usuario.getId())
+                .orElse(null);
+        if (passwordResetToken != null) {
+            passwordResetToken.setToken(UUID.randomUUID().toString());
+            passwordResetToken.setExpiration(10);
+            passwordResetTokenRepository.save(passwordResetToken);
+        }else{
+            passwordResetToken.setToken(UUID.randomUUID().toString());
+            passwordResetToken.setUsuario(usuario);
+            passwordResetToken.setExpiration(10);
+        }
         passwordResetTokenRepository.save(passwordResetToken);
 
         Map<String, Object> model =new  HashMap<>();

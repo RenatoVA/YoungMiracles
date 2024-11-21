@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Sesión Asignada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* Fondo claro */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e6e6e6;
+        }
+        .email-header {
+            background-color: #38b2ac;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .email-content {
+            padding: 20px;
+        }
+        .email-content p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+        .email-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .email-content ul li {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .email-content ul li strong {
+            color: #38b2ac;
+        }
+        .email-footer {
+            background-color: #f1f5f9;
+            color: #666;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+        }
+        .email-footer a {
+            color: #38b2ac;
+            text-decoration: none;
+        }
+        .email-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="email-header">
+        <h1>Young Miracles</h1>
+    </div>
+    <div class="email-content">
+        <h2>Hola, [[${nombre}]]!</h2>
+        <p>Te ha sido asignada una nueva sesión. Aquí tienes los detalles:</p>
+        <ul>
+            <li><strong>Tipo:</strong> [[${tipoSesion}]]</li>
+            <li><strong>Fecha:</strong> [[${fecha}]]</li>
+            <li><strong>Hora:</strong> [[${hora}]]</li>
+            <li><strong>Paciente:</strong> [[${adultoMayor}]]</li>
+        </ul>
+        <p>Por favor, revisa tu panel para más detalles.</p>
+    </div>
+    <div class="email-footer">
+        <p>© 2023 Young Miracles. Todos los derechos reservados.</p>
+        <p>
+            <a href="https://www.youngmiracles.com">Visita nuestro sitio web</a> |
+            <a href="mailto:soporte@youngmiracles.com">Contactar Soporte</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

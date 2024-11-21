@@ -47,6 +47,17 @@ public class UsuarioMapper {
             throw new IllegalArgumentException("Tipo de usuario no soportado");
         }
     }
+    public UpdateUsuarioResponseDTO toupdateResponseDTO(Usuario usuario) {
+        UpdateUsuarioResponseDTO responseDTO = new UpdateUsuarioResponseDTO();
+        responseDTO.setNombre(usuario.getNombre());
+        responseDTO.setApellido_paterno(usuario.getApellido_paterno());
+        responseDTO.setApellido_materno(usuario.getApellido_materno());
+        responseDTO.setEdad(usuario.getEdad());
+        responseDTO.setCorreo(usuario.getCorreo());
+        responseDTO.setGenero(usuario.getGenero());
+        return responseDTO;
+
+    }
     public AuthResponseDTO toauthResponseDTO(Usuario usuario,String token) {
         AuthResponseDTO authResponseDTO = new AuthResponseDTO();
         authResponseDTO.setToken(token);

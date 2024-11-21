@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/checkout")
-@CrossOrigin(origins={"http://localhost:4200/"})
 @PreAuthorize("hasRole('CUSTOMER')")
 public class CheckoutController {
     private final CheckoutService checkoutService;

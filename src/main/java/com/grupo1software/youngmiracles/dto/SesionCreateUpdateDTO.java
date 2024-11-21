@@ -35,6 +35,4 @@ public class SesionCreateUpdateDTO {
     private Long adultoMayorId;
     @NotNull(message= "El id del voluntario es obligatorio")
     private Long voluntarioId;
-    @NotNull (message= "El nombre es obligatorio")
-    private Integer duracion;
 }

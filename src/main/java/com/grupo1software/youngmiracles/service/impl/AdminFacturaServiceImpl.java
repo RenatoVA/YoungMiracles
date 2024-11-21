@@ -68,6 +68,12 @@ public class AdminFacturaServiceImpl implements AdminFacturaService {
     }
 
     @Override
+    public List<FacturaResponseDTO> getFacturasById(Long id) {
+        List<Factura> facturas = facturaRepository.findByAdultoMayorId(id);
+        return facturas.stream().map(facturaMapper::tofacturaResponseDTO).toList();
+    }
+
+    @Override
     public void deleteFactura(Long id) {
         facturaRepository.deleteById(id);
     }

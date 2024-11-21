@@ -10,5 +10,6 @@ public interface AdminFacturaService {
     List<FacturaResponseDTO> getAllFacturas();
     FacturaResponseDTO createFactura(FacturaCreateUpdateDTO facturaCreateUpdateDTO);
     FacturaResponseDTO confirmPurchase(Long id);
+    List<FacturaResponseDTO> getFacturasById(Long id);
     void deleteFactura(Long id);
 }

@@ -1,5 +1,6 @@
 package com.grupo1software.youngmiracles.controller;
 
+import com.grupo1software.youngmiracles.dto.ReporteVoluntarioResponseDTO;
 import com.grupo1software.youngmiracles.dto.SesionCreateUpdateDTO;
 import com.grupo1software.youngmiracles.dto.SesionResponseDTO;
 import com.grupo1software.youngmiracles.dto.SesionUpdateStateDTO;
@@ -16,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/sesiones")
-@CrossOrigin(origins={"http://localhost:4200/"})
 @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
 
 public class AdminSesionController {
@@ -35,6 +35,11 @@ public class AdminSesionController {
             return new ResponseEntity<>(session, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("/reporte/{id}")
+    public ResponseEntity<ReporteVoluntarioResponseDTO> getSessionReport(@PathVariable Long id) {
+        ReporteVoluntarioResponseDTO reporte=adminSesionService.generarReportePorVoluntario(id);
+        return new ResponseEntity<>(reporte, HttpStatus.OK);
     }
 
     @GetMapping
